@@ -289,6 +289,8 @@
             document.getElementById('weather').innerHTML = `<p>City not found. Please try again.</p>`;
           }
         })
+         const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
+ <p>Local Time: ${localTime}</p>
         .catch(error => {
           document.getElementById('weather').innerHTML = `<p>Error fetching weather data.</p>`;
           console.error('Error:', error);
@@ -306,9 +308,6 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-    const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
-<p>Local Time: ${localTime}</p>
-
   </script>
 </body>
 </html>
