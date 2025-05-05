@@ -251,14 +251,15 @@
 
             const weatherBox = document.getElementById('weather');
             const windSpeedKmph = (data.wind.speed * 3.6).toFixed(1);
-
+const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
+ <p>Local Time: ${localTime}</p>
             const weatherData = `
               <h2>${data.name}, ${data.sys.country}</h2>
               <img src="${iconUrl}" alt="Weather icon" style="animation: pulse 2s infinite;">
               <p><strong>${data.weather[0].main}</strong>: ${data.weather[0].description}</p>
               <p>Temperature: ${data.main.temp} °C</p>
               <p>Humidity: ${data.main.humidity}%</p>
-              <p>Wind Speed: ${windSpeedKmph} km/h</p>
+              <p>Wind Speed: ${windSpeedKmph} km/h</p>   <p>Local Time: ${localTime}</p>
               <p><strong>${isDay ? '☀️ Day time' : '🌙 Night time'}</strong></p>
               <p>Sunrise: ${new Date(sunrise * 1000).toLocaleTimeString()}</p>
               <p>Sunset: ${new Date(sunset * 1000).toLocaleTimeString()}</p>
@@ -289,8 +290,7 @@
             document.getElementById('weather').innerHTML = `<p>City not found. Please try again.</p>`;
           }
         })
-         const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
- <p>Local Time: ${localTime}</p>
+         
         .catch(error => {
           document.getElementById('weather').innerHTML = `<p>Error fetching weather data.</p>`;
           console.error('Error:', error);
