@@ -203,101 +203,100 @@
       }
     });
 
-    function getWeather() {
+    async function getWeather() {
       const city = document.getElementById('cityInput').value || 'Loharu';
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${0b428ea8e7150a53e7ddedee87302864}&units=metric`;
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
-   awit  fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          if (data.cod === 200) {
-            const now = data.dt;
-            const sunrise = data.sys.sunrise;
-            const sunset = data.sys.sunset;
-            const isDay = now >= sunrise && now < sunset;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
 
-            const weatherMain = data.weather[0].main.toLowerCase();
-            let bgUrl = '';
+        if (data.cod === 200) {
+          const now = data.dt;
+          const sunrise = data.sys.sunrise;
+          const sunset = data.sys.sunset;
+          const isDay = now >= sunrise && now < sunset;
 
-            switch (weatherMain) {
-              case 'clouds':
-                bgUrl = 'https://img.freepik.com/premium-photo/god-light-dark-cloudy-sky-with-sun-beam-sun-rays-through-black-clouds-god-light-from-heaven_33867-2175.jpg?w=740';
-                break;
-              case 'rain':
-                bgUrl = 'https://th.bing.com/th/id/OIP.dCw2c0Srg07PqoAl3lcvaAHaFB?rs=1&pid=ImgDetMain';
-                break;
-              case 'snow':
-                bgUrl = 'https://cdn1.vectorstock.com/i/1000x1000/11/05/winter-background-2-vector-1761105.jpg';
-                break;
-              case 'thunderstorm':
-                bgUrl = 'https://as1.ftcdn.net/v2/jpg/05/54/60/78/1000_F_554607802_cqgTC1WmpRsgzOHy3Og1rMjjtZv7naqg.jpg';
-                break;
-              case 'mist':
-              case 'fog':
-              case 'haze':
-                bgUrl = 'https://th.bing.com/th/id/OIP.YswN5n561_0a9Q0nfLQkmAHaE9?rs=1&pid=ImgDetMain';
-                break;
-              default:
-                bgUrl = isDay 
-                  ? 'https://i.pinimg.com/736x/23/9f/90/239f90c5c837d71d0eba1e45459f2741.jpg'
-                  : 'https://i.pinimg.com/736x/df/10/57/df1057f64b00977f000dc98e36aeecfd.jpg';
-            }
+          const weatherMain = data.weather[0].main.toLowerCase();
+          let bgUrl = '';
 
-            document.body.style.backgroundImage = `url('${bgUrl}')`;
-            document.body.style.color = isDay ? '#000' : '#fff';
-
-            const iconCode = data.weather[0].icon;
-            const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-
-            const weatherBox = document.getElementById('weather');
-            const windSpeedKmph = (data.wind.speed * 3.6).toFixed(1);
-const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
- <p>Local Time: ${localTime}</p>
-            const weatherData = `
-              <h2>${data.name}, ${data.sys.country}</h2>
-              <img src="${iconUrl}" alt="Weather icon" style="animation: pulse 2s infinite;">
-              <p><strong>${data.weather[0].main}</strong>: ${data.weather[0].description}</p>
-              <p>Temperature: ${data.main.temp} °C</p>
-              <p>Humidity: ${data.main.humidity}%</p>
-              <p>Wind Speed: ${windSpeedKmph} km/h</p>   <p>Local Time: ${localTime}</p>
-              <p><strong>${isDay ? '☀️ Day time' : '🌙 Night time'}</strong></p>
-              <p>Sunrise: ${new Date(sunrise * 1000).toLocaleTimeString()}</p>
-              <p>Sunset: ${new Date(sunset * 1000).toLocaleTimeString()}</p>
-            `;
-
-            weatherBox.innerHTML = weatherData;
-
-            const moon = document.getElementById("moon-animation");
-            const stars = document.getElementById("stars");
-
-            if (isDay) {
-              moon.style.display = "none";
-              stars.innerHTML = "";
-            } else {
-              moon.style.display = "block";
-              stars.innerHTML = "";
-              for (let i = 0; i < 100; i++) {
-                const star = document.createElement("div");
-                star.className = "star";
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                stars.appendChild(star);
-              }
-            }
-
-          } else {
-            document.getElementById('weather').innerHTML = `<p>City not found. Please try again.</p>`;
+          switch (weatherMain) {
+            case 'clouds':
+              bgUrl = 'https://img.freepik.com/premium-photo/god-light-dark-cloudy-sky-with-sun-beam-sun-rays-through-black-clouds-god-light-from-heaven_33867-2175.jpg?w=740';
+              break;
+            case 'rain':
+              bgUrl = 'https://th.bing.com/th/id/OIP.dCw2c0Srg07PqoAl3lcvaAHaFB?rs=1&pid=ImgDetMain';
+              break;
+            case 'snow':
+              bgUrl = 'https://cdn1.vectorstock.com/i/1000x1000/11/05/winter-background-2-vector-1761105.jpg';
+              break;
+            case 'thunderstorm':
+              bgUrl = 'https://as1.ftcdn.net/v2/jpg/05/54/60/78/1000_F_554607802_cqgTC1WmpRsgzOHy3Og1rMjjtZv7naqg.jpg';
+              break;
+            case 'mist':
+            case 'fog':
+            case 'haze':
+              bgUrl = 'https://th.bing.com/th/id/OIP.YswN5n561_0a9Q0nfLQkmAHaE9?rs=1&pid=ImgDetMain';
+              break;
+            default:
+              bgUrl = isDay 
+                ? 'https://i.pinimg.com/736x/23/9f/90/239f90c5c837d71d0eba1e45459f2741.jpg'
+                : 'https://i.pinimg.com/736x/df/10/57/df1057f64b00977f000dc98e36aeecfd.jpg';
           }
-        })
-         
-        .catch(error => {
-          document.getElementById('weather').innerHTML = `<p>Error fetching weather data.</p>`;
-          console.error('Error:', error);
-        });
+
+          document.body.style.backgroundImage = `url('${bgUrl}')`;
+          document.body.style.color = isDay ? '#000' : '#fff';
+
+          const iconCode = data.weather[0].icon;
+          const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+          const weatherBox = document.getElementById('weather');
+          const windSpeedKmph = (data.wind.speed * 3.6).toFixed(1);
+          const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
+
+          const weatherData = `
+            <h2>${data.name}, ${data.sys.country}</h2>
+            <img src="${iconUrl}" alt="Weather icon" style="animation: pulse 2s infinite;">
+            <p><strong>${data.weather[0].main}</strong>: ${data.weather[0].description}</p>
+            <p>Temperature: ${data.main.temp} °C</p>
+            <p>Humidity: ${data.main.humidity}%</p>
+            <p>Wind Speed: ${windSpeedKmph} km/h</p>
+            <p>Local Time: ${localTime}</p>
+            <p><strong>${isDay ? '☀️ Day time' : '🌙 Night time'}</strong></p>
+            <p>Sunrise: ${new Date(sunrise * 1000).toLocaleTimeString()}</p>
+            <p>Sunset: ${new Date(sunset * 1000).toLocaleTimeString()}</p>
+          `;
+
+          weatherBox.innerHTML = weatherData;
+
+          const moon = document.getElementById("moon-animation");
+          const stars = document.getElementById("stars");
+
+          if (isDay) {
+            moon.style.display = "none";
+            stars.innerHTML = "";
+          } else {
+            moon.style.display = "block";
+            stars.innerHTML = "";
+            for (let i = 0; i < 100; i++) {
+              const star = document.createElement("div");
+              star.className = "star";
+              star.style.top = `${Math.random() * 100}%`;
+              star.style.left = `${Math.random() * 100}%`;
+              star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+              stars.appendChild(star);
+            }
+          }
+
+        } else {
+          document.getElementById('weather').innerHTML = `<p>City not found. Please try again.</p>`;
+        }
+      } catch (error) {
+        document.getElementById('weather').innerHTML = `<p>Error fetching weather data.</p>`;
+        console.error('Error:', error);
+      }
     }
 
-    // Auto-load weather on page open
     window.onload = getWeather;
   </script>
 
