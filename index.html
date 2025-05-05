@@ -138,7 +138,6 @@
       100% { transform: scale(1); }
     }
 
-    /* Moon and stars */
     #moon-animation {
       width: 80px;
       height: 80px;
@@ -188,13 +187,11 @@
   <img src="OIP.jpeg" alt="World Map" class="map-image"/>
   <p>Enter Your Location</p>
 
-  <input type="text" id="cityInput" value="" placeholder="Enter your city"/>
+  <input type="text" id="cityInput" placeholder="Enter your city"/>
   <button onclick="getWeather()">🔍 Get Weather</button>
 
-  <!-- 🌕 Moon and stars animation elements -->
   <div id="moon-animation"></div>
   <div id="stars"></div>
-
   <div id="weather"></div>
 
   <script>
@@ -207,7 +204,7 @@
     });
 
     function getWeather() {
-      const city = document.getElementById('cityInput').value;
+      const city = document.getElementById('cityInput').value || 'Loharu';
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
       fetch(url)
@@ -242,8 +239,8 @@
                 break;
               default:
                 bgUrl = isDay 
-                  ? src="https://i.pinimg.com/736x/23/9f/90/239f90c5c837d71d0eba1e45459f2741.jpg"
-                  : "https://i.pinimg.com/736x/df/10/57/df1057f64b00977f000dc98e36aeecfd.jpg";
+                  ? 'https://i.pinimg.com/736x/23/9f/90/239f90c5c837d71d0eba1e45459f2741.jpg'
+                  : 'https://i.pinimg.com/736x/df/10/57/df1057f64b00977f000dc98e36aeecfd.jpg';
             }
 
             document.body.style.backgroundImage = `url('${bgUrl}')`;
@@ -253,13 +250,15 @@
             const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
             const weatherBox = document.getElementById('weather');
+            const windSpeedKmph = (data.wind.speed * 3.6).toFixed(1);
+
             const weatherData = `
               <h2>${data.name}, ${data.sys.country}</h2>
               <img src="${iconUrl}" alt="Weather icon" style="animation: pulse 2s infinite;">
               <p><strong>${data.weather[0].main}</strong>: ${data.weather[0].description}</p>
               <p>Temperature: ${data.main.temp} °C</p>
               <p>Humidity: ${data.main.humidity}%</p>
-              <p>Wind Speed: ${data.wind.speed} km/h</p>
+              <p>Wind Speed: ${windSpeedKmph} km/h</p>
               <p><strong>${isDay ? '☀️ Day time' : '🌙 Night time'}</strong></p>
               <p>Sunrise: ${new Date(sunrise * 1000).toLocaleTimeString()}</p>
               <p>Sunset: ${new Date(sunset * 1000).toLocaleTimeString()}</p>
@@ -267,7 +266,6 @@
 
             weatherBox.innerHTML = weatherData;
 
-            // Moon & Stars animation
             const moon = document.getElementById("moon-animation");
             const stars = document.getElementById("stars");
 
@@ -297,7 +295,7 @@
         });
     }
 
-    // Load on page open
+    // Auto-load weather on page open
     window.onload = getWeather;
   </script>
 
