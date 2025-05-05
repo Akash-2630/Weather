@@ -306,6 +306,9 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+    const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
+<p>Local Time: ${localTime}</p>
+
   </script>
 </body>
 </html>
