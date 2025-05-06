@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -193,33 +194,32 @@
   <div id="moon-animation"></div>
   <div id="stars"></div>
   <div id="weather"></div>
-
   <script>
     const apiKey = '0b428ea8e7150a53e7ddedee87302864';
-
+  
     document.getElementById("cityInput").addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         getWeather();
       }
     });
-
+  
     async function getWeather() {
       const city = document.getElementById('cityInput').value || 'Loharu';
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
+  
       try {
         const response = await fetch(url);
         const data = await response.json();
-
+  
         if (data.cod === 200) {
           const now = data.dt;
           const sunrise = data.sys.sunrise;
           const sunset = data.sys.sunset;
           const isDay = now >= sunrise && now < sunset;
-
+  
           const weatherMain = data.weather[0].main.toLowerCase();
           let bgUrl = '';
-
+  
           switch (weatherMain) {
             case 'clouds':
               bgUrl = 'https://img.freepik.com/premium-photo/god-light-dark-cloudy-sky-with-sun-beam-sun-rays-through-black-clouds-god-light-from-heaven_33867-2175.jpg?w=740';
@@ -243,35 +243,30 @@
                 ? 'https://i.pinimg.com/736x/23/9f/90/239f90c5c837d71d0eba1e45459f2741.jpg'
                 : 'https://i.pinimg.com/736x/df/10/57/df1057f64b00977f000dc98e36aeecfd.jpg';
           }
-
+  
           document.body.style.backgroundImage = `url('${bgUrl}')`;
           document.body.style.color = isDay ? '#000' : '#fff';
-
+  
           const iconCode = data.weather[0].icon;
           const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-
+  
           const weatherBox = document.getElementById('weather');
-          const windSpeedKmph = (data.wind.speed * 3.6).toFixed(1);
-          const localTime = new Date((data.dt + data.timezone) * 1000).toLocaleTimeString();
-
+  
           const weatherData = `
             <h2>${data.name}, ${data.sys.country}</h2>
             <img src="${iconUrl}" alt="Weather icon" style="animation: pulse 2s infinite;">
             <p><strong>${data.weather[0].main}</strong>: ${data.weather[0].description}</p>
             <p>Temperature: ${data.main.temp} °C</p>
-            <p>Humidity: ${data.main.humidity}%</p>
-            <p>Wind Speed: ${windSpeedKmph} km/h</p>
-            <p>Local Time: ${localTime}</p>
             <p><strong>${isDay ? '☀️ Day time' : '🌙 Night time'}</strong></p>
-            <p>Sunrise: ${new Date(sunrise * 1000).toLocaleTimeString()}</p>
-            <p>Sunset: ${new Date(sunset * 1000).toLocaleTimeString()}</p>
+            <p>Sunrise: ${new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</p>
+            <p>Sunset: ${new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
           `;
-
+  
           weatherBox.innerHTML = weatherData;
-
+  
           const moon = document.getElementById("moon-animation");
           const stars = document.getElementById("stars");
-
+  
           if (isDay) {
             moon.style.display = "none";
             stars.innerHTML = "";
@@ -287,7 +282,7 @@
               stars.appendChild(star);
             }
           }
-
+  
         } else {
           document.getElementById('weather').innerHTML = `<p>City not found. Please try again.</p>`;
         }
@@ -296,9 +291,11 @@
         console.error('Error:', error);
       }
     }
-
+  
     window.onload = getWeather;
   </script>
+  
+  
 
   <footer class="weather-footer">
     <p>🔗 Weather powered by <a href="https://openweathermap.org" target="_blank">OpenWeatherMap</a></p>
